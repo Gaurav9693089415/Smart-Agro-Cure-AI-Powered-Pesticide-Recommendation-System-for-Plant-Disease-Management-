@@ -1,0 +1,18 @@
+# Ignore datasets only
+data/
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+myenv/
+
+# Ignore heavy model files (optional)
+*.pt
+*.pth
+*.ckpt
+*.h5
+faiss_index/
+artifacts/uploads/
+artifacts/vectorstores/
