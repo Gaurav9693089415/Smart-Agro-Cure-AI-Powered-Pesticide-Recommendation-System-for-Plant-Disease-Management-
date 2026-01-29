@@ -246,10 +246,3 @@ This project is licensed under the **MIT License**.
 ---
 
 
-If you want next:
-
-* interview explanation script
-* 2–3 line resume bullets
-* “why not deployed” answer framing
-
-Just tell me 👍
