@@ -16,3 +16,4 @@ myenv/
 faiss_index/
 artifacts/uploads/
 artifacts/vectorstores/
+
