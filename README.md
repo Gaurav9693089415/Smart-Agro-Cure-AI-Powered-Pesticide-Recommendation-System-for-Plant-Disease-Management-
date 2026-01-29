@@ -1,4 +1,5 @@
 
+
 ---
 
 # 🌱 Smart Agro-Cure
@@ -6,7 +7,7 @@
 ### AI-Powered Pesticide Recommendation System for Plant Disease Management
 
 Smart Agro-Cure is an **end-to-end AI-based multimodal system** that detects plant diseases from leaf images and generates **document-verified pesticide recommendations** using a **CNN + RAG + LLM** pipeline.
-The system is designed for **accuracy, safety, and real-world deployment**.
+The system is designed for **accuracy, safety, explainability, and real-world deployment**.
 
 ---
 
@@ -37,26 +38,26 @@ Smart Agro-Cure addresses these gaps by combining **computer vision** with **ret
 
 ### Core Components
 
-1. **Vision Model (CNN)**
+### 1️⃣ Vision Model (CNN)
 
-   * EfficientNet-B0 for plant disease classification
-   * Trained on Indian crop disease datasets
-   * Outputs crop, disease, and confidence score
+* EfficientNet-B0 for plant disease classification
+* Trained on Indian crop disease datasets
+* Outputs crop, disease, and confidence score
 
-2. **Retrieval-Augmented Generation (RAG)**
+### 2️⃣ Retrieval-Augmented Generation (RAG)
 
-   * Official IPM and agricultural documents indexed using FAISS
-   * Relevant documents retrieved dynamically based on detected disease
+* Official IPM and agricultural documents indexed using **FAISS**
+* Relevant documents retrieved dynamically based on detected disease
 
-3. **Large Language Model (LLM)**
+### 3️⃣ Large Language Model (LLM)
 
-   * Generates farmer-friendly recommendations
-   * Strictly grounded in retrieved documents to avoid hallucinations
+* Generates farmer-friendly recommendations
+* Strictly grounded in retrieved documents to avoid hallucinations
 
-4. **Backend & Deployment**
+### 4️⃣ Backend & Deployment
 
-   * FastAPI-based backend
-   * Real-time inference and advisory generation
+* FastAPI-based backend for production-style inference
+* Streamlit-based UI for easy deployment and evaluation
 
 ---
 
@@ -104,11 +105,15 @@ smart-agro-cure/
 │   └── dataset preparation scripts
 │
 ├── artifacts/
-│   └── class_index.json        # Class mapping (lightweight config)
+│   ├── class_index.json        # Class mapping
+│   ├── model_efficientnet_b0.pth
+│   └── vectorstores/           # FAISS index + metadata
 │
 ├── frontend/
-│   └── index.html              # Simple UI
+│   └── index.html              # HTML UI (voice-enabled)
 │
+├── streamlit_app.py            # Streamlit deployment app
+├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
@@ -125,9 +130,9 @@ smart-agro-cure/
 ### Preprocessing
 
 * Image resizing (224 × 224)
-* Normalization (ImageNet stats)
+* Normalization (ImageNet statistics)
 * Data augmentation
-* Train/validation split (80/20)
+* Train / validation split (80 / 20)
 
 ---
 
@@ -146,13 +151,14 @@ smart-agro-cure/
 
 ---
 
-## 🔐 Hallucination Control (Important)
+## 🔐 Hallucination Control (Critical Design Choice)
 
-To ensure safe recommendations:
+To ensure **safe and reliable pesticide recommendations**:
 
-* LLM responses are **restricted to retrieved documents only**
-* No external or free-form knowledge allowed
-* Low-confidence predictions trigger safe fallback responses
+* LLM responses are **strictly grounded in retrieved IPM documents**
+* No free-form or external knowledge allowed
+* Low-confidence predictions trigger conservative, safe responses
+* Explicit instructions prevent hallucinated pesticide names or doses
 
 ---
 
@@ -161,45 +167,84 @@ To ensure safe recommendations:
 * Leaf image-based disease detection
 * Document-verified pesticide recommendations
 * Confidence score display
-* Multilingual advisory (English / Hindi / Hinglish)
-* Real-time FastAPI backend
-* Modular, extensible design
+* Multilingual advisory:
+
+  * English
+  * Hindi (Devanagari)
+  * Hinglish (Roman Hindi)
+* Modular and extensible design
+* Deployment-ready architecture
 
 ---
 
-## 🚀 How to Run (High-Level)
+## 🚀 Deployment Modes
+
+Smart Agro-Cure is designed with **clear separation of concerns**, following real-world engineering practices.
+
+---
+
+### 1️⃣ Streamlit Deployment (Cloud / Hugging Face)
+
+* Used for **public demos and evaluation**
+* Lightweight, fast UI
+* No browser permission dependencies
+* Supports multilingual text-based interaction
+
+Run locally:
 
 ```bash
-# Install dependencies
 pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
 
-# Run FastAPI backend
+This version is deployed on **Hugging Face Spaces**.
+
+---
+
+### 2️⃣ FastAPI + HTML UI (Local Voice Demo)
+
+* Supports:
+
+  * 🎤 Voice input (Speech-to-Text)
+  * 🔊 Voice output (Text-to-Speech)
+* Uses browser-native APIs
+* Intended for **local demo and interview presentation**
+
+Run locally:
+
+```bash
+pip install -r requirements.txt
 uvicorn backend.app.main:app --reload
 ```
 
-*(Model weights and datasets are intentionally excluded from the repo for cleanliness and reproducibility.)*
+> **Note:** Voice features are intentionally not enabled in cloud deployments due to browser permission and security constraints.
+
+---
+
+## 🤗 Hugging Face Deployment
+
+The Streamlit version of Smart Agro-Cure is deployed on **Hugging Face Spaces** for easy access and evaluation.
+
+* Application entry point: `streamlit_app.py`
+* Dependencies managed via `requirements.txt`
+* Sensitive credentials (e.g., OpenAI API key) are securely stored using **Hugging Face Secrets**
+* No secrets are exposed in the repository
 
 ---
 
 ## 🔬 Research Contribution
 
-This project extends existing CNN-based plant disease detection research by:
+This project extends traditional CNN-based plant disease detection by:
 
-* replacing static pesticide databases with **RAG-based retrieval**
-* integrating **LLM-driven, explainable advisories**
-* focusing on **real-world deployment and safety**
-
----
-
-## 📈 Future Enhancements
-
-* Disease severity estimation
-* Bounding-box or segmentation-based localization
-* Offline / edge deployment
-* Weather and soil data integration
-* Mobile application support
+* Replacing static pesticide databases with **RAG-based retrieval**
+* Integrating **LLM-driven, explainable advisories**
+* Focusing on **deployment safety, verification, and real-world usability**
 
 ---
+
+
+
+
 
 ## 👤 Author
 
@@ -211,6 +256,7 @@ IIIT Lucknow
 
 ## 📜 License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
 
 ---
+
