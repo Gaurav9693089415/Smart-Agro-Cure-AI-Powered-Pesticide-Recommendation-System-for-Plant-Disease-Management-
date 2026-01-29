@@ -1,5 +1,7 @@
 
 
+
+
 ---
 
 # 🌱 Smart Agro-Cure
@@ -7,20 +9,21 @@
 ### AI-Powered Pesticide Recommendation System for Plant Disease Management
 
 Smart Agro-Cure is an **end-to-end AI-based multimodal system** that detects plant diseases from leaf images and generates **document-verified pesticide recommendations** using a **CNN + RAG + LLM** pipeline.
-The system is designed for **accuracy, safety, explainability, and real-world deployment**.
+
+The project is designed with a **real-world production mindset**, focusing on **accuracy, safety, explainability, and clean system design** rather than cloud-specific shortcuts.
 
 ---
 
 ## 📌 Problem Statement
 
 Crop diseases significantly reduce agricultural productivity and farmer income.
-Existing solutions often:
+Most existing solutions:
 
 * rely on manual inspection,
 * provide generic or unsafe pesticide advice,
-* lack explainability and verification.
+* lack explainability and source verification.
 
-Smart Agro-Cure addresses these gaps by combining **computer vision** with **retrieval-augmented language models** to deliver **trusted, multilingual advisories**.
+Smart Agro-Cure addresses these issues by combining **computer vision** with **retrieval-augmented language models (RAG)** to deliver **trusted, multilingual, and explainable advisories** grounded in official agricultural documents.
 
 ---
 
@@ -30,34 +33,44 @@ Smart Agro-Cure addresses these gaps by combining **computer vision** with **ret
 * Provide **verified pesticide recommendations** from official IPM documents
 * Reduce pesticide misuse and environmental impact
 * Support multilingual farmer interaction (English / Hindi / Hinglish)
-* Deliver a **deployment-ready AI system**
+* Design a **deployment-ready but locally demonstrable AI system**
 
 ---
 
 ## 🧠 System Overview
 
-### Core Components
-
 ### 1️⃣ Vision Model (CNN)
 
-* EfficientNet-B0 for plant disease classification
+* **EfficientNet-B0** for plant disease classification
 * Trained on Indian crop disease datasets
-* Outputs crop, disease, and confidence score
+* Outputs:
+
+  * Crop
+  * Disease
+  * Confidence score
+
+---
 
 ### 2️⃣ Retrieval-Augmented Generation (RAG)
 
 * Official IPM and agricultural documents indexed using **FAISS**
-* Relevant documents retrieved dynamically based on detected disease
+* Disease-aware queries dynamically retrieve relevant documents
+* Ensures recommendations are **document-backed**, not hallucinated
+
+---
 
 ### 3️⃣ Large Language Model (LLM)
 
-* Generates farmer-friendly recommendations
-* Strictly grounded in retrieved documents to avoid hallucinations
+* Generates farmer-friendly advisories
+* Strictly constrained to retrieved content
+* Designed to **never invent pesticide names or doses**
 
-### 4️⃣ Backend & Deployment
+---
 
-* FastAPI-based backend for production-style inference
-* Streamlit-based UI for easy deployment and evaluation
+### 4️⃣ Backend & Interface
+
+* **FastAPI** backend for production-style inference design
+* **Streamlit** and **HTML UI** used only for **local evaluation and demos**
 
 ---
 
@@ -106,17 +119,19 @@ smart-agro-cure/
 │
 ├── artifacts/
 │   ├── class_index.json        # Class mapping
-│   ├── model_efficientnet_b0.pth
 │   └── vectorstores/           # FAISS index + metadata
 │
 ├── frontend/
-│   └── index.html              # HTML UI (voice-enabled)
+│   └── index.html              # Voice-enabled HTML UI (local demo)
 │
-├── streamlit_app.py            # Streamlit deployment app
+├── streamlit_app.py            # Streamlit-based local demo UI
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
+
+> ⚠️ **Note:**
+> Trained model weights and large artifacts are intentionally excluded from the repository to keep it lightweight and reproducible.
 
 ---
 
@@ -156,13 +171,13 @@ smart-agro-cure/
 To ensure **safe and reliable pesticide recommendations**:
 
 * LLM responses are **strictly grounded in retrieved IPM documents**
-* No free-form or external knowledge allowed
+* No free-form or external knowledge is allowed
 * Low-confidence predictions trigger conservative, safe responses
 * Explicit instructions prevent hallucinated pesticide names or doses
 
 ---
 
-## 🌍 Features
+## 🌍 Key Features
 
 * Leaf image-based disease detection
 * Document-verified pesticide recommendations
@@ -172,63 +187,36 @@ To ensure **safe and reliable pesticide recommendations**:
   * English
   * Hindi (Devanagari)
   * Hinglish (Roman Hindi)
-* Modular and extensible design
-* Deployment-ready architecture
+* Modular, extensible system design
 
 ---
 
-## 🚀 Deployment Modes
+## 🚀 How to Run (Local Only)
 
-Smart Agro-Cure is designed with **clear separation of concerns**, following real-world engineering practices.
+This project is intended for **local execution and evaluation**.
 
----
-
-### 1️⃣ Streamlit Deployment (Cloud / Hugging Face)
-
-* Used for **public demos and evaluation**
-* Lightweight, fast UI
-* No browser permission dependencies
-* Supports multilingual text-based interaction
-
-Run locally:
+### Streamlit Demo (Text-based)
 
 ```bash
 pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-This version is deployed on **Hugging Face Spaces**.
-
 ---
 
-### 2️⃣ FastAPI + HTML UI (Local Voice Demo)
+### FastAPI + HTML UI (Voice Demo)
 
-* Supports:
+Supports:
 
-  * 🎤 Voice input (Speech-to-Text)
-  * 🔊 Voice output (Text-to-Speech)
-* Uses browser-native APIs
-* Intended for **local demo and interview presentation**
-
-Run locally:
+* 🎤 Voice input (Speech-to-Text)
+* 🔊 Voice output (Text-to-Speech)
 
 ```bash
 pip install -r requirements.txt
 uvicorn backend.app.main:app --reload
 ```
 
-> **Note:** Voice features are intentionally not enabled in cloud deployments due to browser permission and security constraints.
-
----
-
-## 🤗 Hugging Face Deployment
-
-The Streamlit version of Smart Agro-Cure is deployed on **Hugging Face Spaces** for easy access and evaluation.
-
-* Application entry point: `streamlit_app.py`
-* Dependencies managed via `requirements.txt`
-* Sensitive credentials (e.g., OpenAI API key) are securely stored using **Hugging Face Secrets**
-* No secrets are exposed in the repository
+> Voice features rely on browser APIs and are **meant for local demos and interviews only**.
 
 ---
 
@@ -238,13 +226,10 @@ This project extends traditional CNN-based plant disease detection by:
 
 * Replacing static pesticide databases with **RAG-based retrieval**
 * Integrating **LLM-driven, explainable advisories**
-* Focusing on **deployment safety, verification, and real-world usability**
+* Emphasizing **safety, verification, and real-world usability**
+* Designing a system that mirrors **production ML workflows**
 
 ---
-
-
-
-
 
 ## 👤 Author
 
@@ -260,3 +245,11 @@ This project is licensed under the **MIT License**.
 
 ---
 
+
+If you want next:
+
+* interview explanation script
+* 2–3 line resume bullets
+* “why not deployed” answer framing
+
+Just tell me 👍
